@@ -66,7 +66,7 @@
         }
 
         function bubbleSort(array) {
-            array = array.slice()
+            array = array.slice();
             let isSorted = false;
             let stoppingPoint = array.length;
             while (!isSorted) {
@@ -88,45 +88,53 @@
         }
 
         function mergeSort(array) {
-            return divide(leftHalf(array), rightHalf(array));
+            let leftArray = leftHalf(array), rightArray = rightHalf(array);
 
-            function divide(left, right) {
-                if (left.length <= 1 && right.length <= 1) {
-                    return conquer(left, right);
+            return divide(leftArray, rightArray, array, 0, leftArray.length - 1, leftArray.length, array.length - 1);
+
+            function divide(leftArray, rightArray, array, leftStart, leftEnd, rightStart, rightEnd) {
+                if (leftArray.length <= 1 && rightArray.length <= 1) {
+                    return conquer(leftArray, rightArray, array);
                 }
 
+                let leftOfLeftArray = leftHalf(leftArray);
+                let rightOfLeftArray = rightHalf(leftArray);
+
+                let leftOfRightArray = leftHalf(rightArray);
+                let rightOfRightArray = rightHalf(rightArray);
+
                 return conquer(
-                    divide(leftHalf(left), rightHalf(left)),
-                    divide(leftHalf(right), rightHalf(right))
+                    divide(leftOfLeftArray, rightOfLeftArray, array),
+                    divide(leftOfRightArray, rightOfRightArray, array)
                 );
             }
 
-            function conquer(a, b) {
+            function conquer(leftHalf, rightHalf, array) {
                 let p1 = 0;
                 let p2 = 0;
 
                 let result = [];
                 let i = 0;
 
-                while (p1 < a.length && p2 < b.length) {
-                    if (a[p1] <= b[p2]) {
-                        result.push(a[p1]);
+                while (p1 < leftHalf.length && p2 < rightHalf.length) {
+                    if (leftHalf[p1] <= rightHalf[p2]) {
+                        result.push(leftHalf[p1]);
                         p1++;
                     } else {
-                        result.push(b[p2]);
+                        result.push(rightHalf[p2]);
                         p2++;
                     }
                     i++;
                 }
 
-                while (p1 < a.length) {
-                    result.push(a[p1]);
+                while (p1 < leftHalf.length) {
+                    result.push(leftHalf[p1]);
                     i++;
                     p1++;
                 }
 
-                while (p2 < b.length) {
-                    result.push(b[p2]);
+                while (p2 < rightHalf.length) {
+                    result.push(rightHalf[p2]);
                     i++;
                     p2++;
                 }
@@ -145,6 +153,10 @@
                     ptr++;
                     i++;
                 }
+                debugger
+
+                // replaces elements from left most index to index array.length - result.length (last one exclusive)
+
                 return result;
             }
 
@@ -158,6 +170,7 @@
                     ptr++;
                     i++;
                 }
+                debugger
                 return result;
             }
         }
