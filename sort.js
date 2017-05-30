@@ -153,8 +153,6 @@
                     ptr++;
                     i++;
                 }
-                debugger
-
                 // replaces elements from left most index to index array.length - result.length (last one exclusive)
 
                 return result;
@@ -170,7 +168,6 @@
                     ptr++;
                     i++;
                 }
-                debugger
                 return result;
             }
         }
