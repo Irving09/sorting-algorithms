@@ -176,7 +176,9 @@
 
             if (array.length <= 1) return array;
 
-            return _quickSort(array.slice(), 0, array.length - 1);
+            let sortedArray = _quickSort(array.slice(), 0, array.length - 1);
+            visualizer(sortedArray.slice(), ++counter, 'quick');
+            return sortedArray;
 
             function _quickSort(array, low, high) {
                 let pivot;
