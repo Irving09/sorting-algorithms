@@ -1,6 +1,5 @@
 # sorting-algorithms
-Different sorting algorithms and their visualizations using D3.
-This is a homework for TCSS 531 at UW Tacoma in the Autumn of 2016.
+Sorting algorithms and their visualizations. You can view the demo here: https://inno-sort.herokuapp.com
 
 # Dependencies
 `NodeJS` and the `lite-server` npm module
