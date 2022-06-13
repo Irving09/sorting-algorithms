@@ -13,7 +13,7 @@
         }
     };
 
-    function SortAlgorithms(visualizer) {
+    function SortAlgorithms(render1, render2) {
         const sortingAlgorithms = {
             insertion: insertionSort,
             selection: selectionSort,
@@ -22,9 +22,8 @@
             quick: quickSort
         };
 
-        let counter = 0;
-
         function insertionSort(array) {
+            let delayCounter = 1;
             array = array.slice();
             if (array.length <= 1) return;
 
@@ -39,7 +38,8 @@
                     array[p2] = key;
                     p1--;
                     p2--;
-                    visualizer(array.slice(), ++counter, 'insertion');
+                    render1(array, delayCounter, 'insertion');
+                    delayCounter++;
                 }
                 ptr++;
                 p1 = ptr;
@@ -49,6 +49,7 @@
         }
 
         function selectionSort(array) {
+            let delayCounter = 1;
             array = array.slice();
             let tmp;
             for (let i = 0; i < array.length - 1; i++) {
@@ -58,7 +59,8 @@
                         tmp = array[i];
                         array[i] = array[j];
                         array[j] = tmp;
-                        visualizer(array.slice(), ++counter, 'selection');
+                        render1(array, delayCounter, 'selection');
+                        delayCounter++;
                     }
                 }
             }
@@ -66,6 +68,7 @@
         }
 
         function bubbleSort(array) {
+            let delayCounter = 1;
             array = array.slice();
             let isSorted = false;
             let stoppingPoint = array.length;
@@ -77,7 +80,8 @@
                         let tmp = array[current];
                         array[current] = array[next];
                         array[next] = tmp;
-                        visualizer(array.slice(), ++counter, 'bubble');
+                        render1(array, delayCounter, 'bubble');
+                        delayCounter++;
                     }
                     current++;
                     next++;
@@ -87,98 +91,77 @@
             return array;
         }
 
-        function mergeSort(array) {
-            let leftArray = leftHalf(array), rightArray = rightHalf(array);
+        function mergeSort(arr) {
+            let delayCounter = 1;
 
-            return divide(leftArray, rightArray, array, 0, leftArray.length - 1, leftArray.length, array.length - 1);
+            let mid = Math.floor(arr.length / 2);
 
-            function divide(leftArray, rightArray, array, leftStart, leftEnd, rightStart, rightEnd) {
-                if (leftArray.length <= 1 && rightArray.length <= 1) {
-                    return conquer(leftArray, rightArray, array);
+            divide(arr, 0, mid - 1, mid, arr.length - 1);
+            conquer(arr, 0, mid - 1, mid, arr.length - 1);
+
+            function divide(arr, ll, lr, rl, rr) {
+                const leftHalfLength = lr - ll + 1;
+                const rightHalfLength = rr - rl + 1;
+
+                if (leftHalfLength > 1) {
+                    const leftHalfMid = ll + Math.floor((lr - ll) / 2);
+                    divide(arr, ll, leftHalfMid, leftHalfMid + 1, lr);
+                    conquer(arr, ll, leftHalfMid, leftHalfMid + 1, lr);
                 }
 
-                let leftOfLeftArray = leftHalf(leftArray);
-                let rightOfLeftArray = rightHalf(leftArray);
-
-                let leftOfRightArray = leftHalf(rightArray);
-                let rightOfRightArray = rightHalf(rightArray);
-
-                return conquer(
-                    divide(leftOfLeftArray, rightOfLeftArray, array),
-                    divide(leftOfRightArray, rightOfRightArray, array)
-                );
+                if (rightHalfLength > 1) {
+                    const rightHalfMid = rl + Math.floor((rr - rl) / 2);
+                    divide(arr, rl, rightHalfMid, rightHalfMid + 1, rr);
+                    conquer(arr, rl, rightHalfMid, rightHalfMid + 1, rr);
+                }
             }
 
-            function conquer(leftHalf, rightHalf, array) {
-                let p1 = 0;
-                let p2 = 0;
+            function conquer(arr, ll, lr, rl, rr) {
+                if (ll > rl || lr > rr)
+                    return;
 
-                let result = [];
-                let i = 0;
+                let p1 = ll;
+                let p2 = rl;
 
-                while (p1 < leftHalf.length && p2 < rightHalf.length) {
-                    if (leftHalf[p1] <= rightHalf[p2]) {
-                        result.push(leftHalf[p1]);
+                let sorted = [];
+                while (p1 <= lr && p2 <= rr) {
+                    if (arr[p1] <= arr[p2]) {
+                        sorted.push(arr[p1]);
                         p1++;
                     } else {
-                        result.push(rightHalf[p2]);
+                        sorted.push(arr[p2]);
                         p2++;
                     }
-                    i++;
                 }
 
-                while (p1 < leftHalf.length) {
-                    result.push(leftHalf[p1]);
-                    i++;
+                while (p1 <= lr) {
+                    sorted.push(arr[p1]);
                     p1++;
                 }
 
-                while (p2 < rightHalf.length) {
-                    result.push(rightHalf[p2]);
-                    i++;
+                while (p2 <= rr) {
+                    sorted.push(arr[p2]);
                     p2++;
                 }
 
-                visualizer(result.slice(), ++counter, 'merge');
-                return result;
-            }
-
-            function leftHalf(array) {
-                let size = Math.floor(array.length / 2);
-                let ptr = 0, i = 0;
-
-                let result = [];
-                while (ptr < size) {
-                    result.push(array[i]);
-                    ptr++;
-                    i++;
+                for (let i = ll, s = 0; i <= rr; i++, s++) {
+                    arr[i] = sorted[s];
                 }
-                // replaces elements from left most index to index array.length - result.length (last one exclusive)
 
-                return result;
-            }
-
-            function rightHalf(array) {
-                let size = array.length - (Math.floor(array.length / 2));
-                let ptr = 0, i = Math.floor(array.length / 2);
-
-                let result = [];
-                while (ptr < size) {
-                    result.push(array[i]);
-                    ptr++;
-                    i++;
-                }
-                return result;
+                render1(arr, delayCounter, 'merge');
+                delayCounter++;
             }
         }
 
         function quickSort(array) {
+            let innoCounter = 1;
 
             if (array.length <= 1) return array;
 
-            let sortedArray = _quickSort(array.slice(), 0, array.length - 1);
-            visualizer(sortedArray.slice(), ++counter, 'quick');
-            return sortedArray;
+            _quickSort(array, 0, array.length - 1);
+            render1(array, innoCounter++, 'quick');
+
+            return array;
 
             function _quickSort(array, low, high) {
                 let pivot;
@@ -188,7 +171,6 @@
                     _quickSort(array, low, pivot - 1);
                     _quickSort(array, pivot + 1, high);
                 }
-                return array.slice();
             }
 
             function partition(array, low, high) {
@@ -200,9 +182,9 @@
                 while (left < right) {
                     while (array[left] <= target) left++;
                     while (array[right] > target) right--;
-                    if (left < right)
+                    if (left < right) {
                         swap(array, left, right);
-                    visualizer(array.slice(), ++counter, 'quick');
+                    }
                 }
 
                 array[low] = array[right];
@@ -214,13 +196,12 @@
                 let tmp = array[indexA];
                 array[indexA] = array[indexB];
                 array[indexB] = tmp;
+                render1(array, innoCounter++, 'quick');
             }
-
         }
 
         function use(algorithm) {
             utils.assertString(algorithm);
-            counter = 0;
             return {
                 sort: function(array) {
                     utils.assertArray(array);
