@@ -88,6 +88,7 @@
         }
 
         function mergeSort(arr) {
+            arr = arr.slice();
             let delayCounter = 1;
 
             let mid = Math.floor(arr.length / 2);
@@ -150,6 +151,7 @@
         }
 
         function quickSort(array) {
+            array = array.slice();
 
             if (array.length <= 1) return array;
 

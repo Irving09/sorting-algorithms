@@ -35,12 +35,13 @@
                 .sort(testArray);
 
             sortAlgorithms
-                .use('quick')
+                .use('merge')
                 .sort(testArray);
 
             sortAlgorithms
-                .use('merge')
+                .use('quick')
                 .sort(testArray);
+            
         });
 
     function visualizer(array, counter, algorithm) {
