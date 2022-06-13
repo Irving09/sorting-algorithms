@@ -155,7 +155,7 @@
 
             if (array.length <= 1) return array;
 
-            let sortedArray = _quickSort(array.slice(), 0, array.length - 1);
+            let sortedArray = _quickSort(array, 0, array.length - 1);
             visualizer(sortedArray.slice(), ++counter, 'quick');
             return sortedArray;
 
@@ -181,7 +181,6 @@
                     while (array[right] > target) right--;
                     if (left < right)
                         swap(array, left, right);
-                    visualizer(array.slice(), ++counter, 'quick');
                 }
 
                 array[low] = array[right];
@@ -193,6 +192,7 @@
                 let tmp = array[indexA];
                 array[indexA] = array[indexB];
                 array[indexB] = tmp;
+                visualizer(array.slice(), ++counter, 'quick');
             }
 
         }
