@@ -66,7 +66,7 @@
                     .style('height', '20px')
                     .style('width', d => (d + 1) * 10 + 'px')
                     .style('background', 'lightgreen')
-                    .style('border', '1px solid black');
+                    .style('border', '1px dotted grey');
             }, 80 * _counter);
         })(array.slice(), ++counter, algorithm);
     }
