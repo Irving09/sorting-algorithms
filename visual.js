@@ -41,6 +41,7 @@
             sortAlgorithms
                 .use('quick')
                 .sort(testArray);
+            
         });
 
     function visualizer(array, counter, algorithm) {
@@ -62,10 +63,10 @@
 
                 dataUpdate
                     .merge(dataEnter)
-                    .style('height', '10px')
-                    .style('width', d => (d + 1) * 5 + 'px')
+                    .style('height', '20px')
+                    .style('width', d => (d + 1) * 10 + 'px')
                     .style('background', 'lightgreen')
-                    .style('border', '1px solid black');
+                    .style('border', '1px dotted grey');
             }, 80 * _counter);
         })(array.slice(), ++counter, algorithm);
     }

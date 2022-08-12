@@ -87,96 +87,75 @@
             return array;
         }
 
-        function mergeSort(array) {
-            let leftArray = leftHalf(array), rightArray = rightHalf(array);
+        function mergeSort(arr) {
+            arr = arr.slice();
+            let delayCounter = 1;
 
-            return divide(leftArray, rightArray, array, 0, leftArray.length - 1, leftArray.length, array.length - 1);
+            let mid = Math.floor(arr.length / 2);
 
-            function divide(leftArray, rightArray, array, leftStart, leftEnd, rightStart, rightEnd) {
-                if (leftArray.length <= 1 && rightArray.length <= 1) {
-                    return conquer(leftArray, rightArray, array);
+            divide(arr, 0, mid - 1, mid, arr.length - 1);
+            conquer(arr, 0, mid - 1, mid, arr.length - 1);
+
+            function divide(arr, ll, lr, rl, rr) {
+                const leftHalfLength = lr - ll + 1;
+                const rightHalfLength = rr - rl + 1;
+
+                if (leftHalfLength > 1) {
+                    const leftHalfMid = ll + Math.floor((lr - ll) / 2);
+                    divide(arr, ll, leftHalfMid, leftHalfMid + 1, lr);
+                    conquer(arr, ll, leftHalfMid, leftHalfMid + 1, lr);
                 }
 
-                let leftOfLeftArray = leftHalf(leftArray);
-                let rightOfLeftArray = rightHalf(leftArray);
-
-                let leftOfRightArray = leftHalf(rightArray);
-                let rightOfRightArray = rightHalf(rightArray);
-
-                return conquer(
-                    divide(leftOfLeftArray, rightOfLeftArray, array),
-                    divide(leftOfRightArray, rightOfRightArray, array)
-                );
+                if (rightHalfLength > 1) {
+                    const rightHalfMid = rl + Math.floor((rr - rl) / 2);
+                    divide(arr, rl, rightHalfMid, rightHalfMid + 1, rr);
+                    conquer(arr, rl, rightHalfMid, rightHalfMid + 1, rr);
+                }
             }
 
-            function conquer(leftHalf, rightHalf, array) {
-                let p1 = 0;
-                let p2 = 0;
+            function conquer(arr, ll, lr, rl, rr) {
+                if (ll > rl || lr > rr)
+                    return;
 
-                let result = [];
-                let i = 0;
+                let p1 = ll;
+                let p2 = rl;
 
-                while (p1 < leftHalf.length && p2 < rightHalf.length) {
-                    if (leftHalf[p1] <= rightHalf[p2]) {
-                        result.push(leftHalf[p1]);
+                let sorted = [];
+                while (p1 <= lr && p2 <= rr) {
+                    if (arr[p1] <= arr[p2]) {
+                        sorted.push(arr[p1]);
                         p1++;
                     } else {
-                        result.push(rightHalf[p2]);
+                        sorted.push(arr[p2]);
                         p2++;
                     }
-                    i++;
                 }
 
-                while (p1 < leftHalf.length) {
-                    result.push(leftHalf[p1]);
-                    i++;
+                while (p1 <= lr) {
+                    sorted.push(arr[p1]);
                     p1++;
                 }
 
-                while (p2 < rightHalf.length) {
-                    result.push(rightHalf[p2]);
-                    i++;
+                while (p2 <= rr) {
+                    sorted.push(arr[p2]);
                     p2++;
                 }
 
-                visualizer(result.slice(), ++counter, 'merge');
-                return result;
-            }
-
-            function leftHalf(array) {
-                let size = Math.floor(array.length / 2);
-                let ptr = 0, i = 0;
-
-                let result = [];
-                while (ptr < size) {
-                    result.push(array[i]);
-                    ptr++;
-                    i++;
+                for (let i = ll, s = 0; i <= rr; i++, s++) {
+                    arr[i] = sorted[s];
                 }
-                // replaces elements from left most index to index array.length - result.length (last one exclusive)
 
-                return result;
-            }
-
-            function rightHalf(array) {
-                let size = array.length - (Math.floor(array.length / 2));
-                let ptr = 0, i = Math.floor(array.length / 2);
-
-                let result = [];
-                while (ptr < size) {
-                    result.push(array[i]);
-                    ptr++;
-                    i++;
-                }
-                return result;
+                visualizer(arr, delayCounter, 'merge');
+                delayCounter++;
             }
         }
 
         function quickSort(array) {
+            array = array.slice();
 
             if (array.length <= 1) return array;
 
-            let sortedArray = _quickSort(array.slice(), 0, array.length - 1);
+            let sortedArray = _quickSort(array, 0, array.length - 1);
             visualizer(sortedArray.slice(), ++counter, 'quick');
             return sortedArray;
 
@@ -202,7 +181,6 @@
                     while (array[right] > target) right--;
                     if (left < right)
                         swap(array, left, right);
-                    visualizer(array.slice(), ++counter, 'quick');
                 }
 
                 array[low] = array[right];
@@ -214,6 +192,7 @@
                 let tmp = array[indexA];
                 array[indexA] = array[indexB];
                 array[indexB] = tmp;
+                visualizer(array.slice(), ++counter, 'quick');
             }
 
         }
